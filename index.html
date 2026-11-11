@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Owen Timer</title>
+<style>
+  :root { color-scheme: light dark; --bg:#111; --fg:#f4efe6; --accent:#c8102e; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--fg); font:17px/1.4 -apple-system, system-ui, sans-serif; text-align:center; padding:24px; box-sizing:border-box; }
+  h1 { font-size:22px; margin:0 0 8px; }
+  p { margin:0 0 20px; opacity:.8; }
+  a.btn { display:inline-block; background:var(--accent); color:#fff; text-decoration:none; font-weight:700; padding:16px 28px; border-radius:14px; font-size:19px; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="h">Starting your timer…</h1>
+  <p id="p">If it doesn’t start, tap the button.</p>
+  <a class="btn" id="go" href="#">Start timer</a>
+</main>
+<script>
+  // Reads ?s=<seconds> and hands it to the "Owen Timer" iPhone shortcut.
+  var q = new URLSearchParams(location.search), s = parseInt(q.get('s'), 10);
+  var name = (q.get('n') || 'Owen Timer').slice(0, 40);
+  if (!(s > 0 && s <= 86400)) {
+    document.getElementById('h').textContent = 'No timer length given';
+    document.getElementById('p').textContent = 'Open this from the Phone alarm button in the recipe book.';
+    document.getElementById('go').style.display = 'none';
+  } else {
+    var m = Math.round(s / 60);
+    document.getElementById('h').textContent = 'Starting a ' + (s >= 60 ? m + ' min' : s + ' sec') + ' timer…';
+    var url = 'shortcuts://run-shortcut?name=' + encodeURIComponent(name) + '&input=text&text=' + s;
+    document.getElementById('go').href = url;
+    location.href = url;
+  }
+</script>
+</body>
+</html>
